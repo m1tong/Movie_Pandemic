@@ -1,4 +1,4 @@
-![image](https://github.com/m1tong/Movie_Pandemic/assets/82180216/10197426-f455-451b-8cde-2f7562ff99c1)# Movie_Pandemic
+# Movie_Pandemic
 
 by [Michelle Tong](https://m1tong.github.io/) (m1tong.edu) 
 
@@ -143,7 +143,7 @@ Description on the columns of the final dataframe:
 #### Covid dataset
 We will now take a look at the general trend for covid-19 cases dailly and overall.
 
-
+![image](https://github.com/m1tong/Movie_Pandemic/assets/82180216/10197426-f455-451b-8cde-2f7562ff99c1)
 
 ## Prediction Model
 
