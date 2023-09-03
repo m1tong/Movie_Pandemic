@@ -1,4 +1,4 @@
-# Movie_Pandemic
+![image](https://github.com/m1tong/Movie_Pandemic/assets/82180216/10197426-f455-451b-8cde-2f7562ff99c1)# Movie_Pandemic
 
 by [Michelle Tong](https://m1tong.github.io/) (m1tong.edu) 
 
@@ -10,8 +10,11 @@ Last edit: September 3, 2023
 3. [Background & Prior Work](#background)
 4. [Hypothesis](#Hypothesis)
 5. [Data(s)](#data)
-6. [Data Cleaning](#cleaning)
-7. 
+6. [Data Cleaning and Merging](#cleaning)
+7. [Data Analysis & Results](#analysis-result)
+   - [Exploratory Data Analysis](#eda)
+8. [Ethics & Privacy](#ethics)
+9. [Summary](#summary)
 
 ---
 
@@ -70,12 +73,104 @@ This dataset is the final dataset we will use to analyse the hypothesis after me
 budget(float), revenue(float), runtime(float), vote_average(float), end_date(string), num_day(integer), num_cov(integer), and 
 num_vac(integer). The dataset contains every released movie in the U.S market within five years, which includes both pre-covid and covid period. In order to better matching the data of covid cases and vaccinations with every movie, we assume that the duration of every movie in the U.S market is 30 days. 
 
-## Data Cleaning <a name="cleaning"></a>
+## Data Cleaning and Merging <a name="cleaning"></a>
 
 We have 4 datasets and decide to clean them separately.
 
-### US Covid-19 Daily Cases dataset
+Here's the covid dataset after cleaning
 
-Let's import the US Covid-19 Daily Cases dataset and take a look at it.
+| date                |   case |   tot_cases |   case10 |
+|:--------------------|-------:|------------:|---------:|
+| 2020-01-22 00:00:00 |      4 |           4 | 0.69897  |
+| 2020-01-23 00:00:00 |      2 |           6 | 0.477121 |
+| 2020-01-24 00:00:00 |      1 |           7 | 0.30103  |
+| 2020-01-25 00:00:00 |      0 |           7 | 0        |
+| 2020-01-26 00:00:00 |      1 |           8 | 0.30103  |
 
-| submission_date   | state   | tot_cases   | conf_cases   | prob_cases   |   new_case |   pnew_case | tot_death   | conf_death   | prob_death   |   new_death |   pnew_death | created_at             | consent_cases   | consent_deaths   |\n|:------------------|:--------|:------------|:-------------|:-------------|-----------:|------------:|:------------|:-------------|:-------------|------------:|-------------:|:-----------------------|:----------------|:-----------------|\n| 03/11/2021        | KS      | 297,229     | 241,035      | 56,194       |          0 |           0 | 4,851       | nan          | nan          |           0 |            0 | 03/12/2021 03:20:13 PM | Agree           | nan              |\n| 12/01/2021        | ND      | 163,565     | 135,705      | 27,860       |        589 |         220 | 1,907       | nan          | nan          |           9 |            0 | 12/02/2021 02:35:20 PM | Agree           | Not agree        |\n| 01/02/2022        | AS      | 11          | nan          | nan          |          0 |           0 | 0           | nan          | nan          |           0 |            0 | 01/03/2022 03:18:16 PM | nan             | nan              |\n| 11/22/2021        | AL      | 841,461     | 620,483      | 220,978      |        703 |         357 | 16,377      | 12,727       | 3,650        |           7 |            3 | 11/22/2021 12:00:00 AM | Agree           | Agree            |\n| 05/30/2022        | AK      | 251,425     | nan          | nan          |          0 |           0 | 1,252       | nan          | nan          |           0 |            0 | 05/31/2022 01:20:20 PM | nan             | nan              |
+Here's the vaccine dataset after cleaning
+
+| Date                | Week Number of Year   |   Total Doses Administered Daily |   Cumulative Vaccination |   Vaccination10 |
+|:--------------------|:----------------------|---------------------------------:|-------------------------:|----------------:|
+| 2020-12-14 00:00:00 | 2020-51               |                             4760 |                     4760 |         3.67761 |
+| 2020-12-15 00:00:00 | 2020-51               |                            47690 |                    52450 |         4.67843 |
+| 2020-12-16 00:00:00 | 2020-51               |                           159792 |                   212242 |         5.20356 |
+| 2020-12-17 00:00:00 | 2020-51               |                           274780 |                   487022 |         5.43899 |
+| 2020-12-18 00:00:00 | 2020-51               |                           420158 |                   907180 |         5.62341 |
+
+Here's the movie-covid dataset after cleaning and merging
+
+| title                  |   popularity | release_date        |      budget |          revenue |   runtime |   vote_average | end_date            |   num_day |   num_cov |   num_vac |    pop_log |   bgt_log |   rev_log |   runtime_log |
+|:-----------------------|-------------:|:--------------------|------------:|-----------------:|----------:|---------------:|:--------------------|----------:|----------:|----------:|-----------:|----------:|----------:|--------------:|
+| Children of Genghis    |        0.6   | 2017-01-01 00:00:00 | 1.2e+06     | 806000           |       101 |          5     | 2017-01-31 00:00:00 |        30 |         0 |         0 | -0.154902  |   6.07918 |   5.90634 |       2.00475 |
+| The Invisible Guest    |       37.364 | 2017-01-06 00:00:00 | 4e+06       |      3e+07       |       107 |          8.126 | 2017-02-05 00:00:00 |        30 |         0 |         0 |  1.57361   |   6.60206 |   7.47712 |       2.02979 |
+| Çalgı Çengi İkimiz     |        2.585 | 2017-01-06 00:00:00 | 3.91236e+06 |      9.07241e+06 |       116 |          6     | 2017-02-05 00:00:00 |        30 |         0 |         0 |  0.428944  |   6.59244 |   6.95772 |       2.06483 |
+| Gautamiputra Satakarni |        0.946 | 2017-01-12 00:00:00 | 6e+06       |      1.2e+07     |       135 |          4.6   | 2017-02-11 00:00:00 |        30 |         0 |         0 |  0.0195317 |   6.77815 |   7.07918 |       2.13066 |
+| The Bye Bye Man        |       23.312 | 2017-01-12 00:00:00 | 7.4e+06     |      2.66672e+07 |        96 |          5.2   | 2017-02-11 00:00:00 |        30 |         0 |         0 |  1.36944   |   6.86923 |   7.42598 |       1.98272 |
+
+After cleaning up each individual dataset, we can start creating our final dataframe.
+
+Each movie will have a corresponding "num_cov" as the cumulative number of covid cases between its release date and its showing end date (release date plus 30 days). In the case where the end date exceeds the date limit of our covid cases data (10/18/2022), we will only consider the cumulative number of covid cases between its release date and 10/18/2022. We will apply the same approach for "num_vac", the cumulative number of covid vaccination.
+
+Note that both "num_cov" and "num_vac" are 0 for movies with its release date and end date before covid.
+
+| title                  |   popularity | release_date        |      budget |          revenue |   runtime |   vote_average | end_date            |   num_day |   num_cov |   num_vac |    pop_log |   bgt_log |   rev_log |   runtime_log |
+|:-----------------------|-------------:|:--------------------|------------:|-----------------:|----------:|---------------:|:--------------------|----------:|----------:|----------:|-----------:|----------:|----------:|--------------:|
+| Children of Genghis    |        0.6   | 2017-01-01 00:00:00 | 1.2e+06     | 806000           |       101 |          5     | 2017-01-31 00:00:00 |        30 |         0 |         0 | -0.154902  |   6.07918 |   5.90634 |       2.00475 |
+| The Invisible Guest    |       37.364 | 2017-01-06 00:00:00 | 4e+06       |      3e+07       |       107 |          8.126 | 2017-02-05 00:00:00 |        30 |         0 |         0 |  1.57361   |   6.60206 |   7.47712 |       2.02979 |
+| Çalgı Çengi İkimiz     |        2.585 | 2017-01-06 00:00:00 | 3.91236e+06 |      9.07241e+06 |       116 |          6     | 2017-02-05 00:00:00 |        30 |         0 |         0 |  0.428944  |   6.59244 |   6.95772 |       2.06483 |
+| Gautamiputra Satakarni |        0.946 | 2017-01-12 00:00:00 | 6e+06       |      1.2e+07     |       135 |          4.6   | 2017-02-11 00:00:00 |        30 |         0 |         0 |  0.0195317 |   6.77815 |   7.07918 |       2.13066 |
+| The Bye Bye Man        |       23.312 | 2017-01-12 00:00:00 | 7.4e+06     |      2.66672e+07 |        96 |          5.2   | 2017-02-11 00:00:00 |        30 |         0 |         0 |  1.36944   |   6.86923 |   7.42598 |       1.98272 |
+
+
+Now, we have the final dataframe we will use for EDA.
+
+Description on the columns of the final dataframe:
+
+- **title**: The title of a movie
+- **popularity**: the popularity score of each movies based on number of votes, views, favorites, and number of times being added to the watchlist
+- **release_date**: The release date of a movie
+- **budget**: The budget of a movie in dollars
+- **revenue**: The revenue of a movie in dollars
+- **runtime**: The runtime of a movie in minutes
+- **vote_average**: The overall rating of a movie by TMDB in a range of 0-10
+- **end_date**: Defined as 30 days after the release date of a movie (as we assume the time between release date and end date as the showing period of a movie)
+- **num_day**: The number of days record the number of days between the date of first lanuching and date of leaving the movie theater. We assume each movie would be played in the theater for 30 days. 
+- **num_cov**: The cumulative number of covid cases between the release date and end date of a movie
+- **num_vac**: The cumulative number of covid vaccines administered between the release date and end date of a movie
+
+## Data Analysis & Results <a name="analysis-result"></a> 
+### Exploratory Data Analysis <a name="eda"></a> 
+#### Covid dataset
+We will now take a look at the general trend for covid-19 cases dailly and overall.
+
+
+
+## Prediction Model
+
+We are going to use pipline to create prediction model to predict revenue.
+1. create a preparation ColumnTransformer using standardScaler and FunctionTransformer so we can transform column to our desire value.
+2. create a pipeline using our preproc(created in step 1) and a regression model we choose. For here we choose the `Decision Tree Regressor model` instead of `Linear Regression model` because not all column in our dataset is linear or normal.
+3. Split our dataset into training and testing portion using train_test_split with 30% as testing data and 70% as training data. We want to split our dataset into testing and training because we want to make sure our model can predict unknown revenue using our model. And we can see how well our prediction model does because we know the acutal revenue in our testing data.
+4. fit our model and predict using our testing data. 
+
+## Ethics & Privacy <a name="ethics"></a>
+
+As we decided our topic area to be movies as well as COVID-19 cases/vaccination, the data being used by our project does not contain any personal identifiable information or other sensitive information. We believed that such information might belong to the source of the data we used, i.e. TMBD or CDC. 
+
+Our direct access to movie data was from a database website *Kaggle*. Per Kaggle's privacy terms as well as terms of use, we are not allowed to make any modification on a dataset or leverage a dataset for non-academic uses without a permission from the owner(s) of the dataset. We would strictly follow the requirements to ensure data privacy and would gain a permission before any use of a dataset. As the data we used was from *Kaggle*, a database website, the accuracy would not be guaranteed and should always be doubted. Hence, we have to examine the dataset carefully and compare the revenue in the dataset to its source, TMDB, and other online resources to evaluate and eliminate the accuracy of the data.
+
+On the other hand, the source of our COVID-19 datasets was Centers for Disease Control and Prevention, the U.S. federal public health agency under the Department of Health and Human Services. While we did compare the COVID data from New York Times and that from Our World In Data developed by the University of Oxford, we considered CDC's data the most accurate and trustworthy in terms of the scope of this project. Per CDC's terms of use, we are required to give credit to CDC and are not allowed to change the substantive content of the data. We would strictly follow the requirements to ensure data integrity.
+
+Regarding ethical concerns of our project, we acknowledged that our data and analysis did depend on a specific movie database website as our source of data, while we did not take other data sources such as streaming/video platforms into account for our analysis. On top of that, those movie database websites are similar to Wikipedia where everyone can contribute and edit, and the diversity of users might be limited. Hence, it would be possible that the data would lose its accuracy and representativeness. On top of that, as our analysis and prediction centers around COVID-19, our derived conclusion would be hard to reflect and generalize to a larger scope, such as other movies not in our dataset which were already released or will be released in the future.
+
+We were not planning to address the above identified issues at this point. However, future groups who might take over our project could consider including more diverse data to make the data being used representitive so as to produce a more precise analysis whose conclusion might be less biased and might be able to generalize to a larger scope.
+
+
+## Summary <a name="summary"></a>
+
+Since the movie market is a booming industry and the name card of the U.S. culture and country, the movie industry has become a critical part of the U.S. GDP, which generates numerous value and employment opportunities in the country. We have noticed that the covid crisis has greatly impacted various industries in the nation, especially the worsening impact on the local entertainment industry. People were required to stay at home, remain a distance from each other, and avoid group gatherings during the covid period. Fewer people were willing to take the risk of being infected when going to the cinema. Most of them prefer to stay at home. Hence, the huge diminish of the U.S. Box office is foreseeable. In the post-covid period, we anticipate the revival of the U.S. movie market. To predict how well and how quickly would the U.S. market bounce back to the pre-covid level, we assume there is a statistically significant relationship between the revenue of movies and the US national COVID vaccination record as well as COVID-19 cases. We will try to find out the model that will predict future movie revenue based on covid and vaccination data.
+
+We began the process by cleaning up the data first and merging multiple data sets (including movie revenues from the past five years, vaccination data, and covid cases) into one data frame that would be best for us to analyze or visualize. We assume each movie would stay in the cinema for one month and record its revenues in the data frame. In the data analysis process, the covid cases data was skewed to the left, and vaccination data is approximately normal after taking the log. In the inferential analysis step, we can observe that the relationship between covid cases and movie revenue is approximately positively correlated and the relationship between vaccination records and movie revenue is also slightly positive after taking the log. The three most transparent positive relationships with movie revenue after taking the log are movie budget, vote, and popularity, which will be two major factors we will use in the OLS model with vaccination and covid data. The OLS of Movie Revenue v.s. Covid Cases + Covid Vaccination + Runtime + Popularity + Budget + Vote Average give a high R square number, which is 0.685, which means 68.5% of movie revenues can be explained by this model. The line plot shows a positive linear relationship between these six factors, but the p-value of covid and vaccination factor is too high, which are 0.21 and 0.31, which suggests there is no significant relationship between these two factors with movie revenue. Hence, we decide to use the Decision Tree Regressor model to train the data and see the performance score. We first use the decision tree regressor on the variable covid, vaccination, popularity, budget, and runtime. The train score is 0.89686 and the test score is 0.24750. After dropping the variable covid and variable vaccination, we can see the train score increases to 0.94006 and the test score increases to 0.44427, which are quite significant. 
+Overall, we do not accept the hypothesis that there is a significant relationship between movie revenue and covid data. Although the R square is large, the p-value for covid and the vaccination factor is quite large, which indicates the relationship between revenue and these data is not significant.
+
+To take a further step in this research question and our project, we think that more movie-relevant data or variables can help us to produce a better prediction model and avoid confounding. Moreover, we can extend the region to other countries such as China and Britain, since it can help us to understand the effect of the covid on not only the U.S. movie market but also the global movie market better.
